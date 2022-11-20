@@ -25,7 +25,7 @@ class Card:
 
     def set_image(self, path_image):
         self.image = path_image
-        print(self.figure, self.colour, self.image)
+        # print(self.figure, self.colour, self.image)
         # label_card = Label(root, image=self.image).pack()
 
     def __repr__(self):
