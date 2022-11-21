@@ -11,15 +11,12 @@ class App(Tk):
         self.title("Black Jack")
         self.geometry("800x700")
         self.configure(bg="green")
-        # self.columnconfigure(0, weight=4)
-        # self.columnconfigure(1, weight=1)
-        # self.resizable(True, False) # limit X Y
-        self.deck = Deck(self)
-        # self.deck.configure(bg="green")
-        # self.deck.grid(row=0, column=1)
-        self.deck.insert_cards()
 
-        # self.label = Label(self, text='Hello, Tkinter1!').pack()
+        self.deck = Deck(self)
+        self.deck.insert_cards()
+        self.buttonsFrame = Frame(self)
+
+
 
 if __name__ == "__main__":
     app = App()
