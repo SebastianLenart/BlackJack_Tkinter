@@ -14,7 +14,8 @@ class App(Tk):
 
         self.deck = Deck(self)
         self.deck.insert_cards()
-        self.buttonsFrame = Frame(self)
+        self.buttonsFrame = Frame(self, bg="blue")
+        self.buttonsFrame.pack(side=RIGHT, fill="y")
 
 
 
