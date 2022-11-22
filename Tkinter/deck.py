@@ -8,8 +8,8 @@ from PIL import ImageTk, Image
 
 
 class Deck(Frame):
-    PATH_ICONS2 = "C:\\Users\\Sebastian\\priv_BlackJack\\icons"
-    PATH_ICONS = "C:\\Users\Dell\\priv_BlackJack\\icons"
+    PATH_ICONS = "C:\\Users\\Sebastian\\priv_BlackJack\\icons"
+    PATH_ICONS2 = "C:\\Users\Dell\\priv_BlackJack\\icons"
 
     VALUES = {"2": 2,
               "3": 3,
@@ -49,7 +49,7 @@ class Deck(Frame):
 
         # self.pack(padx=50, pady=50)
         self.configure(bg="red")
-        self.pack(side=LEFT,fill="y", expand=False)
+        self.pack(side=LEFT, fill="y", expand=False)
 
     def insert_cards(self):
         counter = [0] # mutable type
