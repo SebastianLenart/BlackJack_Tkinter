@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import ttk
 from PIL import ImageTk, Image
 from deck import Deck
 from word2number import w2n
@@ -76,11 +77,11 @@ class FrameResults(Frame):
         bet_label.grid(options, row=3, column=0, sticky=EW)
 
         for e, bet in enumerate(self.BETS):
-            bet_radio_button = Radiobutton(self, text=bet[0],
-                                           value=bet[1],
-                                           variable=self.selected_bet,
-                                           )
+            bet_radio_button = ttk.Radiobutton(self, text=bet[0],
+                                               value=bet[1],
+                                               variable=self.selected_bet,
+                                               )
             bet_radio_button.grid(row=4 + e, column=0, sticky=EW)
 
         button_confirm = Button(self, text="Confirm")
-        button_confirm.grid(options, row=10, column=0, sticky=EW)
+        button_confirm.grid(options, row=11, column=0, sticky=EW)
