@@ -17,8 +17,8 @@ class App(Tk):
         self.results = FrameResults(self)
 
 
-        # self.deck = Deck(self)
-        # self.deck.insert_cards()
+        self.deck = Deck(self.table)
+        self.deck.insert_cards()
 
 
 
