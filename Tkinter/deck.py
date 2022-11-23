@@ -7,9 +7,9 @@ from tkinter import *
 from PIL import ImageTk, Image
 
 
-class Deck(Frame):
-    PATH_ICONS2 = "C:\\Users\\Sebastian\\priv_BlackJack\\icons"
-    PATH_ICONS = "C:\\Users\Dell\\priv_BlackJack\\icons"
+class Deck():
+    PATH_ICONS = "C:\\Users\\Sebastian\\priv_BlackJack\\icons"
+    PATH_ICONS2 = "C:\\Users\Dell\\priv_BlackJack\\icons"
 
     VALUES = {"2": 2,
               "3": 3,
@@ -26,7 +26,7 @@ class Deck(Frame):
               "A": 11}
 
     def __init__(self, container):
-        super().__init__(container)
+        # super().__init__(container)
         self.cards = []
         self.value_of_cards = []
         self.colour = ["Clubs", "Diamonds", "Hearts", "Spades"]
@@ -34,21 +34,9 @@ class Deck(Frame):
                        "8", "9", "10", "J", "Q", "K", "A"]
         self.direction = os.listdir(self.PATH_ICONS)
         self.image_list = []
+        self.main_frame = container
 
-        # image = Image.open(self.PATH_ICONS + "\\Ace of Clubs.png")
-        # img = image.resize((int(image.width / 7), int(image.height / 7)))
-        # global my_img
-        # my_img = ImageTk.PhotoImage(img)
-        # my_label = Label(self, image=my_img).grid(row=0, column=0)
-
-        buttontest = Button(self, text="testbutton").grid(row=0, column=0)
-        buttontest = Button(self, text="testbutton").grid(row=0, column=1)
-
-        # self.configure(bg="green")
-
-        # self.pack(padx=50, pady=50)
-        self.configure(bg="red")
-        self.pack(side=RIGHT, fill=BOTH, expand=False)
+        buttontest = Button(self.main_frame, text="testbutton").grid(row=0, column=0)
 
     def insert_cards(self):
         counter = [0] # mutable type
