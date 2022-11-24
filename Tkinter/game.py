@@ -2,6 +2,8 @@ from deck import Deck
 from human import Human
 from croupier import Croupier
 from exceptions import GaveOverHumanEmptyWallet
+from tkinter import *
+from tkinter import ttk
 
 
 class Game:
@@ -32,12 +34,25 @@ Enter your choice:
         "2002": 2002
     }
 
-    def __init__(self):
-        self.deck = Deck()
-        self.human = Human(self.deck)
-        self.croupier = Croupier(self.deck)
+    def __init__(self, list_of_frames):
+        self.list_of_frames = list_of_frames
+        self.frame_of_results = self.list_of_frames[2]
+        self.deck = Deck(self.list_of_frames)
+        self.human = Human(self.deck, self.list_of_frames)
+        self.croupier = Croupier(self.deck, self.list_of_frames)
         self.mode_split = False
         self.finish = False
+        self.deck.insert_cards()
+        self.initialization()
+        self.start_play()
+
+        # tests
+        # self.deck.appear_all_card()
+
+    def initialization(self):
+        self.frame_of_results.all_money_label.configure(text=f"All money: {self.human.get_all_money()}")
+
+        self.frame_of_results.update_labels()
 
     def hit(self):
         self.human.insert_cards(1)
@@ -156,9 +171,6 @@ Enter your choice:
             self.get_standard_award("1")
         else:
             return False
-
-    def initialization(self):
-        self.deck.insert_cards()
 
     @staticmethod
     def print_deck(deck: Deck):

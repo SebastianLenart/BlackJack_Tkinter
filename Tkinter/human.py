@@ -3,14 +3,14 @@ from deck import Deck
 
 
 class Human(Player):
-    DEBT = 2000
+    DEBT = 2001
 
-    def __init__(self, deck: Deck):
-        super().__init__(deck)
+    def __init__(self, deck: Deck, list_of_frames):
+        super().__init__(deck, list_of_frames)
         self.all_money = self.DEBT
         self.bet = 0
         self.bet2 = 0
-        self.deck_of_player2_after_split = Deck()
+        self.deck_of_player2_after_split = Deck(self.list_of_frames)
         self.list_of_sum2_after_split = [0]
         self.amount_of_cards2_after_split = 0
 

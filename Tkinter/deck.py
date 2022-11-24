@@ -25,8 +25,10 @@ class Deck():
               "K": 10,
               "A": 11}
 
-    def __init__(self, container):
-        # super().__init__(container)
+    def __init__(self, list_frames):
+        self.list_of_frames = list_frames
+        self.table_frame = self.list_of_frames[1]
+        self.table_frame["bg"] = "green"
         self.cards = []
         self.value_of_cards = []
         self.colour = ["Clubs", "Diamonds", "Hearts", "Spades"]
@@ -34,55 +36,47 @@ class Deck():
                        "8", "9", "10", "J", "Q", "K", "A"]
         self.direction = os.listdir(self.PATH_ICONS)
         self.image_list = []
-        self.main_frame = container
-
-        buttontest = Button(self.main_frame, text="testbutton").grid(row=0, column=0)
 
     def insert_cards(self):
-        counter = [0] # mutable type
+        counter = [0]  # mutable type
         for fig in self.figure:
             for col in self.colour:
                 self.cards.append(Card(fig, col))
                 self.cards[-1].set_value(self.VALUES[fig])
-                self.insert_image(self.cards[-1], counter)
+                self.insert_image(self.cards[-1])
         random.shuffle(self.cards)
 
-    def insert_image(self, card: Card, counter):
+    def insert_image(self, card: Card):
         for file in self.direction:
             full_path = self.PATH_ICONS + "\\" + file
             try:
                 if w2n.word_to_num(file) == int(card.get_figure()) and card.get_colour() in file:
-                    card.set_image(full_path)
+                    card.set_image_path(full_path)
                     self.direction.remove(file)
-                    counter[0] += 1
-                    self.appear_card(full_path, *counter)
-
-                    # print(*counter)
                     return
             except ValueError:
                 if file.split(" ")[0][0] == card.get_figure() and card.get_colour() in file:
-                    card.set_image(full_path)
+                    card.set_image_path(full_path)
                     self.direction.remove(file)
-                    counter[0] += 1
-                    self.appear_card(full_path, *counter)
-                    # print(*counter)
                     return
 
-    def appear_card(self, path: str, counter: int):
-        image = Image.open(path)
-        img = image.resize((int(image.width / 7), int(image.height / 7)))
-        global my_img
-        my_img = ImageTk.PhotoImage(img)
-        self.image_list.append(my_img)
-        # work below
-        # my_label = Label(self, image=self.image_list[-1]).grid(row=1, column=0+(counter))
-        # print(2)
-
+    def appear_all_card(self):
+        # scrollbar = Scrollbar(self.table_frame, orient='vertical') # command
+        # scrollbar.grid(row=0, column=99, rowspan=99, sticky=NS)
+        row = 0
+        col = 0
+        for nr, card in enumerate(self.cards):
+            card.set_image(card.get_image_path())
+            my_img = card.get_image()
+            if nr % 7 == 0:
+                row += 1
+                col = 0
+            col += 1
+            my_label = Label(self.table_frame, image=card.get_image()).grid(row=row, column=col)
 
     def print_card(self):
         for card in self.cards:
             print(card)
-        # print(*tuple(self.cards))
 
     def give_card(self):
         try:

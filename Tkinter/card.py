@@ -1,7 +1,7 @@
 from tkinter import *
 from PIL import ImageTk, Image
-# from root import root
-# from tkinter import *
+from tkinter import *
+from PIL import ImageTk, Image
 
 
 class Card:
@@ -9,7 +9,8 @@ class Card:
         self.figure = figure
         self.colour = colour
         self.value = None
-        self.image = None
+        self.image_path = None
+        self.my_img = None
 
     def set_value(self, value: int):
         self.value = value
@@ -23,10 +24,19 @@ class Card:
     def get_colour(self):
         return self.colour
 
+    def set_image_path(self, path_image):
+        self.image_path = path_image
+
+    def get_image_path(self):
+        return self.image_path
+
     def set_image(self, path_image):
-        self.image = path_image
-        # print(self.figure, self.colour, self.image)
-        # label_card = Label(root, image=self.image).pack()
+        image = Image.open(self.image_path)
+        img = image.resize((int(image.width / 7), int(image.height / 7)))
+        self.my_img = ImageTk.PhotoImage(img)
+
+    def get_image(self):
+        return self.my_img
 
     def __repr__(self):
         return f"{self.figure} : {self.colour}"

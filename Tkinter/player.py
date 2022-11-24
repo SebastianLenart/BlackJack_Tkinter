@@ -4,8 +4,9 @@ from deck import Deck
 
 
 class Player(ABC):
-    def __init__(self, main_deck: Deck):
-        self.deck_of_player = Deck()
+    def __init__(self, main_deck: Deck, list_of_frames):
+        self.list_of_frames = list_of_frames
+        self.deck_of_player = Deck(self.list_of_frames)
         self.main_deck = main_deck
         self.list_of_sum = [0]
         self.amount_of_cards = 0
