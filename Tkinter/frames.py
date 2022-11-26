@@ -6,6 +6,8 @@ from word2number import w2n
 
 
 class FrameButtons(Frame):
+    OPTIONS = {"pady": 10}
+
     def __init__(self, container):
         super().__init__(container)
 
@@ -13,30 +15,26 @@ class FrameButtons(Frame):
         self.columnconfigure(0, weight=1)
         self.pack(side=LEFT, fill=BOTH, expand=False)
         Label(self, text="\tFrameButtons\t").grid(row=0, column=0)
-        self.create_buttons()
+        self.hit_button = Button(self, text="HIT", state=DISABLED)
+        self.stand_button = Button(self, text="STAND", state=DISABLED)
+        self.double_button = Button(self, text="DOUBLE", state=DISABLED)
+        self.blackjack_button = Button(self, text="BLACKJACK", state=DISABLED)
+        self.insurance_button = Button(self, text="INSURANCE", state=DISABLED)
+        self.exit_button = Button(self, text="EXIT", command=self.end_game)
 
-    def create_buttons(self):
-        options = {'pady': 10}
-        hit_button = Button(self, text="HIT", state=DISABLED)
-        hit_button.grid(options, row=1, column=0, sticky=EW)
+        self.update_grid()
 
-        hit_button = Button(self, text="STAND", state=DISABLED)
-        hit_button.grid(options, row=2, column=0, sticky=EW)
+    def update_grid(self):
+        self.hit_button.grid(self.OPTIONS, row=0, column=0, sticky=EW)
+        self.stand_button.grid(self.OPTIONS, row=1, column=0, sticky=EW)
+        self.double_button.grid(self.OPTIONS, row=2, column=0, sticky=EW)
+        self.blackjack_button.grid(self.OPTIONS, row=3, column=0, sticky=EW)
+        self.insurance_button.grid(self.OPTIONS, row=4, column=0, sticky=EW)
+        self.exit_button.grid(self.OPTIONS, row=5, column=0, sticky=EW)
 
-        hit_button = Button(self, text="DOUBLE", state=DISABLED)
-        hit_button.grid(options, row=3, column=0, sticky=EW)
-
-        hit_button = Button(self, text="SPLIT", state=DISABLED)
-        hit_button.grid(options, row=4, column=0, sticky=EW)
-
-        hit_button = Button(self, text="BLACKJACK", state=DISABLED)
-        hit_button.grid(options, row=5, column=0, sticky=EW)
-
-        hit_button = Button(self, text="INSURANCE", state=DISABLED)
-        hit_button.grid(options, row=6, column=0, sticky=EW)
-
-        hit_button = Button(self, text="EXIT", state=DISABLED)
-        hit_button.grid(options, row=7, column=0, sticky=EW)
+    @staticmethod
+    def end_game(self):
+        exit()
 
 
 class FrameTable(Frame):
@@ -60,6 +58,7 @@ class FrameResults(Frame):
 
     def __init__(self, container):
         super().__init__(container)
+        self.parent = None
 
         self.configure(bg="white")
         self.pack(side=LEFT, fill=BOTH, expand=False)
@@ -70,9 +69,17 @@ class FrameResults(Frame):
         self.all_money_label = Label(self, text=f"All money: {200110}")
         self.current_bet_label = Label(self, text=f"Current bet: {2000}")
         self.bet_label = Label(self, text="Choose value of bet:")
-        self.button_confirm = Button(self, text="Confirm")
-        self.button_start = Button(self, text="START", bg="green", state=DISABLED)
+        self.button_confirm = Button(self, text="Confirm", command=self.set_value_bet)
+        self.button_start = Button(self, text="START", bg="green", state=DISABLED, command=self.start)
         self.update_labels()
+
+    def start(self):
+        self.all_money_label.configure(text=f"All money: {self.parent.human.get_all_money()}")
+        self.button_start.configure(state=DISABLED)
+        self.parent.first_hand()
+
+    def set_parent(self, parent):
+        self.parent = parent
 
     def update_labels(self):
         self.all_money_label.grid(self.OPTIONS, row=1, column=0, sticky=EW)
@@ -81,6 +88,16 @@ class FrameResults(Frame):
         self.button_confirm.grid(self.OPTIONS, row=11, column=0, sticky=EW)
         self.button_start.grid(self.OPTIONS, row=12, column=0, sticky=EW, ipady=10)
 
+    def set_value_bet(self):
+        self.button_confirm.configure(state=DISABLED)
+        self.current_bet_label = Label(self, text=f"Current bet: {self.selected_bet.get()}")
+        self.update_labels()
+        self.parent.make_bet(int(self.selected_bet.get()))
+        self.button_start.configure(state=NORMAL)
+
+    def get_value_radio_bet(self):
+        return self.selected_bet.get()
+
     def create_radio_buttons(self):
         for e, bet in enumerate(self.BETS):
             bet_radio_button = ttk.Radiobutton(self, text=bet[0],
@@ -88,3 +105,4 @@ class FrameResults(Frame):
                                                variable=self.selected_bet,
                                                )
             bet_radio_button.grid(row=4 + e, column=0, sticky=EW)
+        self.selected_bet.set("50")

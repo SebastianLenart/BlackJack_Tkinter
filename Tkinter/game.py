@@ -37,6 +37,12 @@ Enter your choice:
     def __init__(self, list_of_frames):
         self.list_of_frames = list_of_frames
         self.frame_of_results = self.list_of_frames[2]
+        self.frame_table = self.list_of_frames[1]
+        self.frame_of_results.set_parent(self)
+        self.create_frames_in_table()
+        self.top_table = None
+        self.middle_table = None
+        self.bottom_table = None
         self.deck = Deck(self.list_of_frames)
         self.human = Human(self.deck, self.list_of_frames)
         self.croupier = Croupier(self.deck, self.list_of_frames)
@@ -49,9 +55,17 @@ Enter your choice:
         # tests
         # self.deck.appear_all_card()
 
+    def create_frames_in_table(self):
+        self.top_table = Frame(self.frame_table, bg="#166B37")
+        self.middle_table = Frame(self.frame_table, bg="grey")
+        self.top_table.pack(fill=BOTH, expand=True)
+        self.middle_table.pack(fill=BOTH, expand=True)
+
+
+
+
     def initialization(self):
         self.frame_of_results.all_money_label.configure(text=f"All money: {self.human.get_all_money()}")
-
         self.frame_of_results.update_labels()
 
     def hit(self):
@@ -184,6 +198,8 @@ Enter your choice:
         self.croupier.print_deck_of_player("croupier: ")
 
     def first_hand(self):
+        # self.bottom_table = Frame(self.frame_table, bg="#166B37")
+        # self.bottom_table.pack(fill=BOTH, expand=True)
         self.croupier.insert_cards(1)
         self.insurance()
         self.human.insert_cards(2)
@@ -191,6 +207,7 @@ Enter your choice:
         self.print_deck_of_player()
 
     def make_bet(self, value=50):
+        print("make bet: ", value)
         self.human.update_debt_of_human(value)
 
     def get_standard_award(self, mode: str):
@@ -224,13 +241,7 @@ Enter your choice:
             "6": self.insurance,
             "7": exit
         }
-        bet = input(f"enter one of the following bet values\n50\n100\n500\n1000\n2002\nYour bet: ")
-        while bet not in ["50", "100", "500", "1000", "2002"]:
-            bet = input("Try again. ")
-        while bet not in ["50", "100", "500", "1000", "2002"] or int(bet) > self.human.all_money :
-            bet = input("Too much. You dont have enough money. Enter again: ")
-        self.make_bet(self.VALUE_OF_BET[bet])
-        self.first_hand()
+        # self.first_hand()
         while (selection := input(self.MENU)) != "7":
             try:
                 menu_functions[selection]()

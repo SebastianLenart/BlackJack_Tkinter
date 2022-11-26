@@ -11,7 +11,7 @@ class App(Tk):
         super().__init__()
 
         self.title("Black Jack")
-        self.geometry("1010x700")
+        self.geometry("1010x800")
         self.configure(bg="green")
 
         self.list_Frames = []
