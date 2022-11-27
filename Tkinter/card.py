@@ -26,6 +26,7 @@ class Card:
 
     def set_image_path(self, path_image):
         self.image_path = path_image
+        self.set_image(self.image_path)
 
     def get_image_path(self):
         return self.image_path

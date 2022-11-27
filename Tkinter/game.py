@@ -39,13 +39,13 @@ Enter your choice:
         self.frame_of_results = self.list_of_frames[2]
         self.frame_table = self.list_of_frames[1]
         self.frame_of_results.set_parent(self)
-        self.create_frames_in_table()
         self.top_table = None
         self.middle_table = None
         self.bottom_table = None
+        self.create_frames_in_table()
         self.deck = Deck(self.list_of_frames)
         self.human = Human(self.deck, self.list_of_frames)
-        self.croupier = Croupier(self.deck, self.list_of_frames)
+        self.croupier = Croupier(self.deck, self.list_of_frames, self.top_table)
         self.mode_split = False
         self.finish = False
         self.deck.insert_cards()
@@ -60,9 +60,11 @@ Enter your choice:
         self.middle_table = Frame(self.frame_table, bg="grey")
         self.top_table.pack(fill=BOTH, expand=True)
         self.middle_table.pack(fill=BOTH, expand=True)
+        self.top_table.pack_propagate(False)
+        self.middle_table.pack_propagate(False)
 
-
-
+        # self.bottom_table = Frame(self.frame_table, bg="#166B37")
+        # self.bottom_table.pack(fill=BOTH, expand=True)
 
     def initialization(self):
         self.frame_of_results.all_money_label.configure(text=f"All money: {self.human.get_all_money()}")
@@ -132,7 +134,7 @@ Enter your choice:
         else:
             print("You have not BlackJack")
 
-    def insurance(self):
+    def insurance(self): # TU SKONCZYlem !!!!!!!!!!!!!!!
         if self.croupier.get_best_value() == 11 and self.croupier.amount_of_cards == 1:
             choice = input("Do you want insurance? 0-no, 1-yes: ")
             while choice not in ["0", "1"]:
@@ -201,6 +203,7 @@ Enter your choice:
         # self.bottom_table = Frame(self.frame_table, bg="#166B37")
         # self.bottom_table.pack(fill=BOTH, expand=True)
         self.croupier.insert_cards(1)
+        self.croupier.display_cards()
         self.insurance()
         self.human.insert_cards(2)
 

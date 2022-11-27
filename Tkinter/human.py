@@ -19,6 +19,9 @@ class Human(Player):
               "debt:", self.get_value_of_bet(),
               "sum:", self.get_all_money())
 
+    def display_cards(self):
+        pass
+
     def print_split_deck(self, who: str):
         print(who, "sum: ", self.list_of_sum, " => ", *self.deck_of_player.cards,
               "debt:", self.get_value_of_bet(), " sum:", self.all_money, "\n\t\t",

@@ -6,6 +6,7 @@ from deck import Deck
 class Player(ABC):
     def __init__(self, main_deck: Deck, list_of_frames):
         self.list_of_frames = list_of_frames
+
         self.deck_of_player = Deck(self.list_of_frames)
         self.main_deck = main_deck
         self.list_of_sum = [0]
@@ -50,6 +51,10 @@ class Player(ABC):
     @abstractmethod
     def print_deck_of_player(self, who: str):
         print(who, "sum: ", self.list_of_sum, " => ", *self.deck_of_player.cards)
+
+    @abstractmethod
+    def display_cards(self):
+        pass
 
     def get_best_value(self):
         return max(self.list_of_sum)
