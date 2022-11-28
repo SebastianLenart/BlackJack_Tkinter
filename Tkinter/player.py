@@ -4,6 +4,8 @@ from deck import Deck
 
 
 class Player(ABC):
+    PATH_DEFAULT_CARD = "C:\\Users\\Sebastian\\priv_BlackJack\\icons\\default.png"
+
     def __init__(self, main_deck: Deck, list_of_frames):
         self.list_of_frames = list_of_frames
 
@@ -11,6 +13,7 @@ class Player(ABC):
         self.main_deck = main_deck
         self.list_of_sum = [0]
         self.amount_of_cards = 0
+        self.cards_label = []
 
     def insert_cards(self, amount, deck=None, list_sum=None, amount_cards=None):
         default = False
