@@ -46,7 +46,6 @@ class FrameButtons(Frame):
     def hit(self):
         self.response.set_parameters(0, "hit")
         self.var = 2
-        print("aa")
         print(self.var)
 
     def split(self):
