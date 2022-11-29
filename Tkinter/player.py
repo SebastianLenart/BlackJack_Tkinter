@@ -39,7 +39,6 @@ class Player(ABC):
             self.deck_of_player = deck
             self.list_of_sum = list_sum
             self.amount_of_cards = amount_cards
-            # default = False
 
     @staticmethod
     def add_value_of_a(list_of_sum: list):
@@ -68,7 +67,9 @@ class Player(ABC):
     @abstractmethod
     def default_parameters(self, deck: Deck):
         del self.deck_of_player
-        self.deck_of_player = Deck()
+
+        self.deck_of_player = Deck(self.list_of_frames)
         self.list_of_sum = [0]
         self.amount_of_cards = 0
         self.main_deck = deck
+        self.cards_label = []

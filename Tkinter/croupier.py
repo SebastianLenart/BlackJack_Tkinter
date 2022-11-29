@@ -37,3 +37,5 @@ class Croupier(Player):
 
     def default_parameters(self, deck):
         super().default_parameters(deck)
+        for widget in self.top_table.pack_slaves():
+            del widget

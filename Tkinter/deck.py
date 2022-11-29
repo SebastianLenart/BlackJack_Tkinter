@@ -8,8 +8,8 @@ from PIL import ImageTk, Image
 
 
 class Deck():
-    PATH_ICONS2 = "C:\\Users\\Sebastian\\priv_BlackJack\\icons"
-    PATH_ICONS = "C:\\Users\Dell\\priv_BlackJack\\icons"
+    PATH_ICONS = "C:\\Users\\Sebastian\\priv_BlackJack\\icons"
+    PATH_ICONS2 = "C:\\Users\Dell\\priv_BlackJack\\icons"
 
     VALUES = {"2": 2,
               "3": 3,

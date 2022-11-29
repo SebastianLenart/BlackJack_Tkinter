@@ -52,6 +52,9 @@ Enter your choice:
         self.finish = False
         self.deck.insert_cards()
         self.initialization()
+        self.bnt = None
+        self.var = IntVar()
+
         self.start_play()
 
         # tests
@@ -141,19 +144,13 @@ Enter your choice:
             self.frame_of_buttons.insurance_button.configure(state=NORMAL)
             self.frame_of_buttons.hit_button.configure(state=NORMAL)
 
-            # while self.frame_of_buttons.response.get_parameters()[0] not in [0, 5]:
-            #     choice = input("Incorrect, Enter correct answer hit-0 or insurance-1: ")
-
-        # self.frame_of_buttons.hit_button.wait_variable(self.frame_of_buttons.var)
-        print("sorkSDSD")
-        #     if choice == 0:
-        #         print("INSURANCE")
-        #         self.get_standard_award("5")
-        #         self.next_game()
-        #     else:
-        #         return
-        # else:
-        #     print("Insurance is not active")
+        self.frame_of_buttons.hit_button.wait_variable(self.var)
+        choice = self.var.get()
+        if choice == 5:
+            self.get_standard_award("5")
+            self.next_game()
+        elif choice == 0:
+            return
 
     def check_split(self):
         if (self.human.amount_of_cards == 2 and
@@ -226,21 +223,21 @@ Enter your choice:
         print(self.human.get_all_money())
         self.finish = True
 
-    def next_game(self):
-        choice = input("Do you want continue a game?\n0-yes\n1-no\nEnter your choice: ")
-        while choice not in ["0", "1"]:
-            input("Try again. ")
-        if not choice == "1":
-            del self.deck
-            self.deck = Deck()
-            self.initialization()
-            self.human.default_parameters(self.deck)
-            self.croupier.default_parameters(self.deck)
-            if self.human.all_money <= 0:
-                raise GaveOverHumanEmptyWallet("Game over, your wallet is empty!")
-            self.start_play()
-        else:
-            exit()
+    def next_game(self):  # default widgets grid itp..
+        for frame in self.list_of_frames:
+            del frame
+            print("sdsd")
+        del self.deck
+
+        self.deck = Deck(self.list_of_frames)
+        self.initialization()
+        self.human.default_parameters(self.deck)
+        self.croupier.default_parameters(self.deck)
+        for frame in self.list_of_frames:
+            frame.upgrade_frame()
+        if self.human.all_money <= 0:
+            raise GaveOverHumanEmptyWallet("Game over, your wallet is empty!")
+        self.start_play()
 
     def start_play(self):
         menu_functions = {

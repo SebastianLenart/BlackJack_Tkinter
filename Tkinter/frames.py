@@ -25,8 +25,13 @@ class FrameButtons(Frame):
         self.exit_button = Button(self, text="EXIT", command=self.end_game)
         self.response = Respond_button()
         self.var = IntVar()
-        self.var = 33
         self.update_grid()
+
+    def upgrade_frame(self):
+        self.configure(bg="white")
+        self.columnconfigure(0, weight=1)
+        self.pack(side=LEFT, fill=BOTH, expand=False)
+        Label(self, text="\tFrameButtons\t").grid(row=0, column=0)
 
     def update_grid(self):
         self.hit_button.grid(self.OPTIONS, row=0, column=0, sticky=EW)
@@ -44,9 +49,8 @@ class FrameButtons(Frame):
         exit()
 
     def hit(self):
-        self.response.set_parameters(0, "hit")
-        self.var = 2
-        print(self.var)
+        self.parent.var.set(0)
+        self.hit_button.configure(state=DISABLED)
 
     def split(self):
         pass
@@ -61,10 +65,8 @@ class FrameButtons(Frame):
         pass
 
     def insurance(self):
-        self.response.set_parameters(0, "hit")
+        self.parent.var.set(5)
         self.insurance_button.configure(state=DISABLED)
-        # self.parent.get_standard_award("5")
-        # self.parent.next_game()
 
 
 
@@ -74,6 +76,11 @@ class FrameTable(Frame):
 
         self.configure(bg="green")
         self.pack(side=LEFT, fill=BOTH, expand=True)
+
+    def upgrade_frame(self):
+        self.configure(bg="green")
+        self.pack(side=LEFT, fill=BOTH, expand=True)
+
 
 
 class FrameResults(Frame):
@@ -103,6 +110,10 @@ class FrameResults(Frame):
         self.button_confirm = Button(self, text="Confirm", command=self.set_value_bet)
         self.button_start = Button(self, text="START", bg="green", state=DISABLED, command=self.start)
         self.update_labels()
+
+    def upgrade_frame(self):
+        self.configure(bg="white")
+        self.pack(side=LEFT, fill=BOTH, expand=False)
 
     def start(self):
         self.all_money_label.configure(text=f"All money: {self.parent.human.get_all_money()}")
