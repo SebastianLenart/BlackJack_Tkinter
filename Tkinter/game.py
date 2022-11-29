@@ -145,7 +145,7 @@ Enter your choice:
             #     choice = input("Incorrect, Enter correct answer hit-0 or insurance-1: ")
 
         # self.frame_of_buttons.hit_button.wait_variable(self.frame_of_buttons.var)
-        print("orkSDSD")
+        print("sorkSDSD")
         #     if choice == 0:
         #         print("INSURANCE")
         #         self.get_standard_award("5")
