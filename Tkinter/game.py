@@ -38,13 +38,15 @@ Enter your choice:
         self.list_of_frames = list_of_frames
         self.frame_of_results = self.list_of_frames[2]
         self.frame_table = self.list_of_frames[1]
+        self.frame_of_buttons = self.list_of_frames[0]
         self.frame_of_results.set_parent(self)
+        self.frame_of_buttons.set_parent(self)
         self.top_table = None
         self.middle_table = None
         self.bottom_table = None
         self.create_frames_in_table()
         self.deck = Deck(self.list_of_frames)
-        self.human = Human(self.deck, self.list_of_frames)
+        self.human = Human(self.deck, self.list_of_frames, self.middle_table, self.bottom_table)
         self.croupier = Croupier(self.deck, self.list_of_frames, self.top_table)
         self.mode_split = False
         self.finish = False
@@ -134,19 +136,24 @@ Enter your choice:
         else:
             print("You have not BlackJack")
 
-    def insurance(self): # TU SKONCZYlem !!!!!!!!!!!!!!!
+    def insurance(self):
         if self.croupier.get_best_value() == 11 and self.croupier.amount_of_cards == 1:
-            choice = input("Do you want insurance? 0-no, 1-yes: ")
-            while choice not in ["0", "1"]:
-                choice = input("Incorrect, Enter correct answer 0-no, 1-yes: ")
-            if choice == "1":
-                print("INSURANCE")
-                self.get_standard_award("5")
-                self.next_game()
-            else:
-                return
-        else:
-            print("Insurance is not active")
+            self.frame_of_buttons.insurance_button.configure(state=NORMAL)
+            self.frame_of_buttons.hit_button.configure(state=NORMAL)
+
+            # while self.frame_of_buttons.response.get_parameters()[0] not in [0, 5]:
+            #     choice = input("Incorrect, Enter correct answer hit-0 or insurance-1: ")
+
+        # self.frame_of_buttons.hit_button.wait_variable(self.frame_of_buttons.var)
+        print("orkSDSD")
+        #     if choice == 0:
+        #         print("INSURANCE")
+        #         self.get_standard_award("5")
+        #         self.next_game()
+        #     else:
+        #         return
+        # else:
+        #     print("Insurance is not active")
 
     def check_split(self):
         if (self.human.amount_of_cards == 2 and
@@ -206,6 +213,7 @@ Enter your choice:
         self.croupier.display_cards()
         self.insurance()
         self.human.insert_cards(2)
+        self.human.display_cards()
 
         self.print_deck_of_player()
 

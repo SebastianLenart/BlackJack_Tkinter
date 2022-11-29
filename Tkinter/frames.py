@@ -3,6 +3,7 @@ from tkinter import ttk
 from PIL import ImageTk, Image
 from deck import Deck
 from word2number import w2n
+from respond_button import Respond_button
 
 
 class FrameButtons(Frame):
@@ -10,31 +11,62 @@ class FrameButtons(Frame):
 
     def __init__(self, container):
         super().__init__(container)
-
+        self.parent = None
         self.configure(bg="white")
         self.columnconfigure(0, weight=1)
         self.pack(side=LEFT, fill=BOTH, expand=False)
         Label(self, text="\tFrameButtons\t").grid(row=0, column=0)
-        self.hit_button = Button(self, text="HIT", state=DISABLED)
-        self.stand_button = Button(self, text="STAND", state=DISABLED)
-        self.double_button = Button(self, text="DOUBLE", state=DISABLED)
-        self.blackjack_button = Button(self, text="BLACKJACK", state=DISABLED)
-        self.insurance_button = Button(self, text="INSURANCE", state=DISABLED)
+        self.hit_button = Button(self, text="HIT", state=DISABLED, command=self.hit)
+        self.split_button = Button(self, text="SPLIT", state=DISABLED, command=self.split)
+        self.stand_button = Button(self, text="STAND", state=DISABLED, command=self.stand)
+        self.double_button = Button(self, text="DOUBLE", state=DISABLED, command=self.double)
+        self.blackjack_button = Button(self, text="BLACKJACK", state=DISABLED, command=self.blackjack)
+        self.insurance_button = Button(self, text="INSURANCE", state=DISABLED, command=self.insurance)
         self.exit_button = Button(self, text="EXIT", command=self.end_game)
-
+        self.response = Respond_button()
+        self.var = IntVar()
+        self.var = 33
         self.update_grid()
 
     def update_grid(self):
         self.hit_button.grid(self.OPTIONS, row=0, column=0, sticky=EW)
-        self.stand_button.grid(self.OPTIONS, row=1, column=0, sticky=EW)
-        self.double_button.grid(self.OPTIONS, row=2, column=0, sticky=EW)
-        self.blackjack_button.grid(self.OPTIONS, row=3, column=0, sticky=EW)
-        self.insurance_button.grid(self.OPTIONS, row=4, column=0, sticky=EW)
-        self.exit_button.grid(self.OPTIONS, row=5, column=0, sticky=EW)
+        self.split_button.grid(self.OPTIONS, row=1, column=0, sticky=EW)
+        self.stand_button.grid(self.OPTIONS, row=2, column=0, sticky=EW)
+        self.double_button.grid(self.OPTIONS, row=3, column=0, sticky=EW)
+        self.blackjack_button.grid(self.OPTIONS, row=4, column=0, sticky=EW)
+        self.insurance_button.grid(self.OPTIONS, row=5, column=0, sticky=EW)
+        self.exit_button.grid(self.OPTIONS, row=6, column=0, sticky=EW)
 
+    def set_parent(self, parent):
+        self.parent = parent
     @staticmethod
-    def end_game(self):
+    def end_game():
         exit()
+
+    def hit(self):
+        self.response.set_parameters(0, "hit")
+        self.var = 2
+        print("aa")
+        print(self.var)
+
+    def split(self):
+        pass
+
+    def stand(self):
+        pass
+
+    def double(self):
+        pass
+
+    def blackjack(self):
+        pass
+
+    def insurance(self):
+        self.response.set_parameters(0, "hit")
+        self.insurance_button.configure(state=DISABLED)
+        # self.parent.get_standard_award("5")
+        # self.parent.next_game()
+
 
 
 class FrameTable(Frame):

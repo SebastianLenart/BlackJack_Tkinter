@@ -5,7 +5,7 @@ from PIL import ImageTk, Image
 
 
 class Card:
-    def __init__(self, figure, colour):
+    def __init__(self, figure="default", colour="default"):
         self.figure = figure
         self.colour = colour
         self.value = None

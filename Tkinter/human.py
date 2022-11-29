@@ -1,12 +1,14 @@
 from player import Player
 from deck import Deck
-
+from tkinter import *
 
 class Human(Player):
     DEBT = 2001
 
-    def __init__(self, deck: Deck, list_of_frames):
+    def __init__(self, deck: Deck, list_of_frames, middle, bottom):
         super().__init__(deck, list_of_frames)
+        self.middle_table = middle
+        # self.bottom_table = bottom
         self.all_money = self.DEBT
         self.bet = 0
         self.bet2 = 0
@@ -14,13 +16,24 @@ class Human(Player):
         self.list_of_sum2_after_split = [0]
         self.amount_of_cards2_after_split = 0
 
+        self.player_score_label = Label(self.middle_table, text=f"Human {self.list_of_sum}", font=("Arial", 26))
+        self.player_score_label.pack(side=TOP, fill="x", expand=False)
+
     def print_deck_of_player(self, who: str):
         print(who, "sum: ", self.list_of_sum, " => ", *self.deck_of_player.cards,
               "debt:", self.get_value_of_bet(),
               "sum:", self.get_all_money())
 
     def display_cards(self):
-        pass
+        for card in self.cards_label:
+            card.destroy()
+
+        for card in self.deck_of_player.cards:
+            card_label = Label(self.middle_table, image=card.get_image())
+            card_label.pack(side=LEFT)
+            self.cards_label.append(card_label)
+        self.player_score_label.configure(text=f"Human {self.list_of_sum}", font=("Arial", 26))
+
 
     def print_split_deck(self, who: str):
         print(who, "sum: ", self.list_of_sum, " => ", *self.deck_of_player.cards,

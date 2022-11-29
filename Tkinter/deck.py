@@ -32,8 +32,9 @@ class Deck():
         self.cards = []
         self.value_of_cards = []
         self.colour = ["Clubs", "Diamonds", "Hearts", "Spades"]
-        self.figure = ["2", "3", "4", "5", "6", "7",
+        self.figure2 = ["2", "3", "4", "5", "6", "7",
                        "8", "9", "10", "J", "Q", "K", "A"]
+        self.figure = ["A"]
         self.direction = os.listdir(self.PATH_ICONS)
         self.image_list = []
 
