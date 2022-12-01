@@ -49,8 +49,10 @@ class FrameButtons(Frame):
         exit()
 
     def hit(self):
+        if self.parent.var.get() != (-1):
+            self.parent.hit()
         self.parent.var.set(0)
-        self.hit_button.configure(state=DISABLED)
+        # self.hit_button.configure(state=DISABLED)
 
     def split(self):
         pass
@@ -66,6 +68,7 @@ class FrameButtons(Frame):
 
     def insurance(self):
         self.parent.var.set(5)
+        self.hit_button.configure(state=DISABLED)
         self.insurance_button.configure(state=DISABLED)
 
 

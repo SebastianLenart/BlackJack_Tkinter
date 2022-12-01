@@ -67,7 +67,6 @@ class Player(ABC):
     @abstractmethod
     def default_parameters(self, deck: Deck):
         del self.deck_of_player
-
         self.deck_of_player = Deck(self.list_of_frames)
         self.list_of_sum = [0]
         self.amount_of_cards = 0

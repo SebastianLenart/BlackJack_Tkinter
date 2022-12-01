@@ -3,6 +3,7 @@ from human import Human
 from croupier import Croupier
 from exceptions import GaveOverHumanEmptyWallet
 from tkinter import *
+from frames import FrameButtons, FrameTable, FrameResults
 from tkinter import ttk
 
 
@@ -54,6 +55,7 @@ Enter your choice:
         self.initialization()
         self.bnt = None
         self.var = IntVar()
+        self.var.set(-1)
 
         self.start_play()
 
@@ -77,6 +79,7 @@ Enter your choice:
 
     def hit(self):
         self.human.insert_cards(1)
+        self.human.display_cards()
         self.print_deck_of_player()
         if self.human.check_max_value() > self.BLACK_JACK:
             if not self.mode_split:
@@ -144,13 +147,15 @@ Enter your choice:
             self.frame_of_buttons.insurance_button.configure(state=NORMAL)
             self.frame_of_buttons.hit_button.configure(state=NORMAL)
 
-        self.frame_of_buttons.hit_button.wait_variable(self.var)
+        self.frame_of_buttons.insurance_button.wait_variable(self.var) # no depends which button press
         choice = self.var.get()
         if choice == 5:
             self.get_standard_award("5")
             self.next_game()
+            return True
         elif choice == 0:
-            return
+            self.frame_of_buttons.insurance_button.configure(state=DISABLED)
+            return False
 
     def check_split(self):
         if (self.human.amount_of_cards == 2 and
@@ -208,11 +213,11 @@ Enter your choice:
         # self.bottom_table.pack(fill=BOTH, expand=True)
         self.croupier.insert_cards(1)
         self.croupier.display_cards()
-        self.insurance()
-        self.human.insert_cards(2)
-        self.human.display_cards()
-
-        self.print_deck_of_player()
+        if not self.insurance():
+            self.human.insert_cards(2)
+            self.human.display_cards()
+        self.check_conditions_buttons()
+        # self.print_deck_of_player()
 
     def make_bet(self, value=50):
         print("make bet: ", value)
@@ -224,20 +229,37 @@ Enter your choice:
         self.finish = True
 
     def next_game(self):  # default widgets grid itp..
-        for frame in self.list_of_frames:
-            del frame
-            print("sdsd")
-        del self.deck
 
+        for widget in self.top_table.winfo_children():
+            try:
+                print(widget.return_text()["text"])
+            except KeyError:
+                widget.destroy()
+        for widget in self.middle_table.winfo_children(): # to test!!!
+            try:
+                print(widget.return_text()["text"])
+            except KeyError:
+                widget.destroy()
+        del self.deck
         self.deck = Deck(self.list_of_frames)
+        self.deck.insert_cards()
         self.initialization()
         self.human.default_parameters(self.deck)
         self.croupier.default_parameters(self.deck)
-        for frame in self.list_of_frames:
-            frame.upgrade_frame()
         if self.human.all_money <= 0:
             raise GaveOverHumanEmptyWallet("Game over, your wallet is empty!")
+        self.frame_of_results.button_confirm.configure(state=NORMAL)
+        self.var.set(-1)
         self.start_play()
+
+    def check_conditions_buttons(self):
+        self.frame_of_buttons.hit_button.configure(state=NORMAL)
+        self.frame_of_buttons.stand_button.configure(state=NORMAL)
+        self.frame_of_buttons.double_button.configure(state=NORMAL)
+        if not self.check_split():
+            self.frame_of_buttons.split_button.configure(state=NORMAL)
+        if self.human.get_best_value() == self.BLACK_JACK and self.human.amount_of_cards == 2:
+            self.frame_of_buttons.blackjack_button.configure(state=NORMAL)
 
     def start_play(self):
         menu_functions = {
@@ -250,17 +272,21 @@ Enter your choice:
             "7": exit
         }
         # self.first_hand()
-        while (selection := input(self.MENU)) != "7":
-            try:
-                menu_functions[selection]()
-                if self.finish:
-                    self.finish = False
-                    self.next_game()
-            except KeyError:
-                print("Invalid input selected. Try again")
-            finally:
-                if selection == "7":
-                    exit()
+
+
+
+
+        # while (selection := input(self.MENU)) != "7":
+        #     try:
+        #         menu_functions[selection]()
+        #         if self.finish:
+        #             self.finish = False
+        #             self.next_game()
+        #     except KeyError:
+        #         print("Invalid input selected. Try again")
+        #     finally:
+        #         if selection == "7":
+        #             exit()
 
 
 if __name__ == "__main__":

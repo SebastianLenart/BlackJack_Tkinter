@@ -28,14 +28,16 @@ class Croupier(Player):
             card_label = Label(self.top_table, image=card.get_image())
             card_label.pack(side=LEFT)
             self.cards_label.append(card_label)
+            self.display_default_card()
+        self.player_score_label.configure(text=f"Croupier {self.list_of_sum}")
+
+    def default_parameters(self, deck):
+        super().default_parameters(deck)
+        self.player_score_label.configure(text=f"Croupier {self.list_of_sum}")
+
+    def display_default_card(self):
         if len(self.deck_of_player.cards) == 1:
             self.default_card.set_image_path(self.PATH_DEFAULT_CARD)
             default_card_label = Label(self.top_table, image=self.default_card.get_image())
             default_card_label.pack(side=LEFT)
             self.cards_label.append(default_card_label)
-        self.player_score_label.configure(text=f"Croupier {self.list_of_sum}")
-
-    def default_parameters(self, deck):
-        super().default_parameters(deck)
-        for widget in self.top_table.pack_slaves():
-            del widget

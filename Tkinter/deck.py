@@ -34,7 +34,7 @@ class Deck():
         self.colour = ["Clubs", "Diamonds", "Hearts", "Spades"]
         self.figure2 = ["2", "3", "4", "5", "6", "7",
                        "8", "9", "10", "J", "Q", "K", "A"]
-        self.figure = ["A"]
+        self.figure = ["K", "A"]
         self.direction = os.listdir(self.PATH_ICONS)
         self.image_list = []
 
@@ -62,8 +62,6 @@ class Deck():
                     return
 
     def appear_all_card(self):
-        # scrollbar = Scrollbar(self.table_frame, orient='vertical') # command
-        # scrollbar.grid(row=0, column=99, rowspan=99, sticky=NS)
         row = 0
         col = 0
         for nr, card in enumerate(self.cards):
