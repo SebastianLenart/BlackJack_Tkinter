@@ -56,7 +56,6 @@ Enter your choice:
         self.bnt = None
         self.var = IntVar()
         self.var.set(-1)
-
         self.start_play()
 
         # tests
@@ -100,6 +99,7 @@ Enter your choice:
         while self.croupier.get_best_value() < self.STOP_ADD_CROUPIER:
             self.croupier.insert_cards(1)
         self.print_deck_of_player()
+        self.croupier.display_cards()
         self.check_result(self.human.get_best_value(), box)
 
     def double(self):
@@ -142,21 +142,6 @@ Enter your choice:
         else:
             print("You have not BlackJack")
 
-    def insurance(self):
-        if self.croupier.get_best_value() == 11 and self.croupier.amount_of_cards == 1:
-            self.frame_of_buttons.insurance_button.configure(state=NORMAL)
-            self.frame_of_buttons.hit_button.configure(state=NORMAL)
-
-        self.frame_of_buttons.insurance_button.wait_variable(self.var) # no depends which button press
-        choice = self.var.get()
-        if choice == 5:
-            self.get_standard_award("5")
-            self.next_game()
-            return True
-        elif choice == 0:
-            self.frame_of_buttons.insurance_button.configure(state=DISABLED)
-            return False
-
     def check_split(self):
         if (self.human.amount_of_cards == 2 and
                 self.human.deck_of_player.cards[0].get_figure() == self.human.deck_of_player.cards[1].get_figure()):
@@ -194,8 +179,8 @@ Enter your choice:
         elif human_result < self.croupier.get_best_value():
             print("HUMAN LOST", box)
             self.get_standard_award("1")
-        else:
-            return False
+        self.next_game()
+
 
     @staticmethod
     def print_deck(deck: Deck):
@@ -208,15 +193,30 @@ Enter your choice:
             self.human.print_split_deck("human:    ")
         self.croupier.print_deck_of_player("croupier: ")
 
+    def insurance(self):
+        if self.croupier.get_best_value() == 11 and self.croupier.amount_of_cards == 1:
+            self.frame_of_buttons.insurance_button.configure(state=NORMAL)
+            self.frame_of_buttons.hit_button.configure(state=NORMAL)
+
+            self.frame_of_buttons.insurance_button.wait_variable(self.var) # no depends which button press
+            choice = self.var.get()
+            if choice == 5:
+                self.get_standard_award("5")
+                self.next_game()
+                return True
+            elif choice == 0:
+                self.frame_of_buttons.insurance_button.configure(state=DISABLED)
+                return False
+        else:
+            return False
+
     def first_hand(self):
-        # self.bottom_table = Frame(self.frame_table, bg="#166B37")
-        # self.bottom_table.pack(fill=BOTH, expand=True)
         self.croupier.insert_cards(1)
         self.croupier.display_cards()
         if not self.insurance():
             self.human.insert_cards(2)
             self.human.display_cards()
-        self.check_conditions_buttons()
+            self.check_conditions_buttons()
         # self.print_deck_of_player()
 
     def make_bet(self, value=50):
@@ -235,7 +235,7 @@ Enter your choice:
                 print(widget.return_text()["text"])
             except KeyError:
                 widget.destroy()
-        for widget in self.middle_table.winfo_children(): # to test!!!
+        for widget in self.middle_table.winfo_children(): # to tes t!!!
             try:
                 print(widget.return_text()["text"])
             except KeyError:
@@ -250,9 +250,15 @@ Enter your choice:
             raise GaveOverHumanEmptyWallet("Game over, your wallet is empty!")
         self.frame_of_results.button_confirm.configure(state=NORMAL)
         self.var.set(-1)
-        self.start_play()
+        self.frame_of_buttons.hit_button.configure(state=DISABLED)
+        self.frame_of_buttons.stand_button.configure(state=DISABLED)
+        self.frame_of_buttons.double_button.configure(state=DISABLED)
+        self.frame_of_buttons.split_button.configure(state=DISABLED)
+        self.frame_of_buttons.blackjack_button.configure(state=DISABLED)
+        # self.start_play()
 
     def check_conditions_buttons(self):
+        print("Sd")
         self.frame_of_buttons.hit_button.configure(state=NORMAL)
         self.frame_of_buttons.stand_button.configure(state=NORMAL)
         self.frame_of_buttons.double_button.configure(state=NORMAL)
@@ -292,7 +298,7 @@ Enter your choice:
 if __name__ == "__main__":
     game = Game()
     game.initialization()
-    game.start_play()
+    # game.start_play()
 
 # do zrobienia:
 """
