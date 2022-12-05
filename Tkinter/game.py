@@ -53,10 +53,11 @@ Enter your choice:
         self.finish = False
         self.deck.insert_cards()
         self.initialization()
-        self.bnt = None
-        self.var = IntVar()
-        self.var.set(-1)
-        self.start_play()
+        self.winner = None
+        # self.bnt = None
+        # self.var = IntVar()
+        # self.var.set(-1)
+        # self.start_play()
 
         # tests
         # self.deck.appear_all_card()
@@ -80,12 +81,14 @@ Enter your choice:
         self.human.insert_cards(1)
         self.human.display_cards()
         self.print_deck_of_player()
-        if self.human.check_max_value() > self.BLACK_JACK:
-            if not self.mode_split:
-                self.check_result(self.human.get_best_value(), "Box 1")
-            else:
-                return True
-            return False
+        # if self.human.check_max_value() > self.BLACK_JACK:
+        #     self.check_result(self.human.get_best_value())
+
+            # if not self.mode_split:
+            #     self.check_result(self.human.get_best_value(), "Box 1")
+            # else:
+            #     return True
+            # return False
 
     def hit_second_box(self):
         self.human.insert_cards(1, self.human.deck_of_player2_after_split,
@@ -105,6 +108,7 @@ Enter your choice:
     def double(self):
         self.make_bet(self.human.get_value_of_bet())
         self.human.insert_cards(1)
+        self.human.display_cards()
         if self.human.check_max_value() > self.BLACK_JACK:
             self.print_deck_of_player()
             self.check_result(self.human.get_best_value())
@@ -165,21 +169,26 @@ Enter your choice:
 
     def check_result(self, human_result, box=""):
         if human_result > self.BLACK_JACK:
+            self.winner = "HUMAN LOST"
             print("HUMAN LOST", box)
             self.get_standard_award("1")
         elif self.croupier.get_best_value() > self.BLACK_JACK:
+            self.winner = "HUMAN WIN"
             print("HUMAN WIN", box)
             self.get_standard_award("4")
         elif self.croupier.get_best_value() == human_result:
+            self.winner = "DRAW"
             print("DRAW", box)
             self.get_standard_award("2")
         elif human_result > self.croupier.get_best_value():
+            self.winner = "HUMAN WIN"
             print("HUMAN WIN", box)
             self.get_standard_award("4")
         elif human_result < self.croupier.get_best_value():
+            self.winner = "HUMAN LOST"
             print("HUMAN LOST", box)
             self.get_standard_award("1")
-        self.next_game()
+        # self.next_game()
 
 
     @staticmethod
@@ -197,27 +206,33 @@ Enter your choice:
         if self.croupier.get_best_value() == 11 and self.croupier.amount_of_cards == 1:
             self.frame_of_buttons.insurance_button.configure(state=NORMAL)
             self.frame_of_buttons.hit_button.configure(state=NORMAL)
-
-            self.frame_of_buttons.insurance_button.wait_variable(self.var) # no depends which button press
-            choice = self.var.get()
-            if choice == 5:
-                self.get_standard_award("5")
-                self.next_game()
-                return True
-            elif choice == 0:
-                self.frame_of_buttons.insurance_button.configure(state=DISABLED)
-                return False
+            return True
         else:
+            self.human.insert_cards(2)
+            self.human.display_cards()
+            self.check_conditions_buttons()
             return False
+
+        #     self.frame_of_buttons.insurance_button.wait_variable(self.var)
+        #     choice = self.var.get()
+        #     if choice == 5:
+        #         self.get_standard_award("5")
+        #         self.next_game()
+        #         return True
+        #     elif choice == 0:
+        #         self.frame_of_buttons.insurance_button.configure(state=DISABLED)
+        #         return False
+        # else:
+        #     return False
 
     def first_hand(self):
         self.croupier.insert_cards(1)
         self.croupier.display_cards()
-        if not self.insurance():
-            self.human.insert_cards(2)
-            self.human.display_cards()
-            self.check_conditions_buttons()
-        # self.print_deck_of_player()
+        self.insurance()
+            # self.human.insert_cards(2)
+            # print("sss")
+            # self.human.display_cards()
+            # self.check_conditions_buttons()
 
     def make_bet(self, value=50):
         print("make bet: ", value)
@@ -249,16 +264,16 @@ Enter your choice:
         if self.human.all_money <= 0:
             raise GaveOverHumanEmptyWallet("Game over, your wallet is empty!")
         self.frame_of_results.button_confirm.configure(state=NORMAL)
-        self.var.set(-1)
+        # self.var.set(-1)
         self.frame_of_buttons.hit_button.configure(state=DISABLED)
         self.frame_of_buttons.stand_button.configure(state=DISABLED)
         self.frame_of_buttons.double_button.configure(state=DISABLED)
         self.frame_of_buttons.split_button.configure(state=DISABLED)
         self.frame_of_buttons.blackjack_button.configure(state=DISABLED)
+        self.frame_of_buttons.insurance_button.configure(state=DISABLED)
         # self.start_play()
 
     def check_conditions_buttons(self):
-        print("Sd")
         self.frame_of_buttons.hit_button.configure(state=NORMAL)
         self.frame_of_buttons.stand_button.configure(state=NORMAL)
         self.frame_of_buttons.double_button.configure(state=NORMAL)
@@ -302,7 +317,7 @@ if __name__ == "__main__":
 
 # do zrobienia:
 """
-dymaniczne manu, zmienia sie w zaleznosci od kart split itd  dopiero w tkinter
+
 testy
 
 """

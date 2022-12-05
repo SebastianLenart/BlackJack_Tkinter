@@ -1,5 +1,5 @@
 from tkinter import *
-from tkinter import ttk
+from tkinter import ttk, messagebox
 from PIL import ImageTk, Image
 from deck import Deck
 from word2number import w2n
@@ -44,34 +44,48 @@ class FrameButtons(Frame):
 
     def set_parent(self, parent):
         self.parent = parent
+
     @staticmethod
     def end_game():
         exit()
 
     def hit(self):
-        if not self.parent.insurance():
+        if (self.parent.insurance() and self.parent.human.amount_of_cards == 0) or self.parent.human.amount_of_cards == 0:
+            self.parent.human.insert_cards(2)
+            self.parent.human.display_cards()
+            self.insurance_button.configure(state=DISABLED)
+        else:
             self.parent.hit()
-        self.parent.var.set(0)
+        self.parent.check_conditions_buttons()
+
+        if self.parent.human.check_max_value() > self.parent.BLACK_JACK:
+            self.parent.check_result(self.parent.human.get_best_value())
+            messagebox.showinfo("Winner", self.parent.winner)
+            self.parent.next_game()
+
+        # self.parent.var.set(0)
         # self.hit_button.configure(state=DISABLED)
 
     def split(self):
         pass
 
     def stand(self):
-        self.parent.var.set(2)
         self.parent.stand()
+        messagebox.showinfo("Winner", self.parent.winner)
+        self.parent.next_game()
 
     def double(self):
-        pass
+        self.parent.double() # do it
 
     def blackjack(self):
         pass
 
     def insurance(self):
-        self.parent.var.set(5)
-        self.hit_button.configure(state=DISABLED)
-        self.insurance_button.configure(state=DISABLED)
-
+        if self.parent.insurance() and self.parent.human.amount_of_cards == 0:
+            self.parent.get_standard_award("5")
+            self.parent.next_game()
+            self.hit_button.configure(state=DISABLED)
+            self.insurance_button.configure(state=DISABLED)
 
 
 class FrameTable(Frame):
@@ -84,7 +98,6 @@ class FrameTable(Frame):
     def upgrade_frame(self):
         self.configure(bg="green")
         self.pack(side=LEFT, fill=BOTH, expand=True)
-
 
 
 class FrameResults(Frame):

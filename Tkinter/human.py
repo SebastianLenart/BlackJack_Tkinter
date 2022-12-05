@@ -79,6 +79,7 @@ class Human(Player):
 
     def default_parameters(self, deck):
         super().default_parameters(deck)
+        self.player_score_label.configure(text=f"Human {self.list_of_sum}", font=("Arial", 26))
         self.bet = 0
         self.bet2 = 0
         del self.deck_of_player2_after_split
