@@ -3,7 +3,6 @@ from tkinter import ttk, messagebox
 from PIL import ImageTk, Image
 from deck import Deck
 from word2number import w2n
-from respond_button import Respond_button
 
 
 class FrameButtons(Frame):
@@ -23,8 +22,6 @@ class FrameButtons(Frame):
         self.blackjack_button = Button(self, text="BLACKJACK", state=DISABLED, command=self.blackjack)
         self.insurance_button = Button(self, text="INSURANCE", state=DISABLED, command=self.insurance)
         self.exit_button = Button(self, text="EXIT", command=self.end_game)
-        self.response = Respond_button()
-        self.var = IntVar()
         self.update_grid()
 
     def upgrade_frame(self):
@@ -50,7 +47,7 @@ class FrameButtons(Frame):
         exit()
 
     def hit(self):
-        if (self.parent.insurance() and self.parent.human.amount_of_cards == 0) or self.parent.human.amount_of_cards == 0:
+        if (self.parent.human.amount_of_cards == 0 and self.parent.insurance()) or self.parent.human.amount_of_cards == 0:
             self.parent.human.insert_cards(2)
             self.parent.human.display_cards()
             self.insurance_button.configure(state=DISABLED)
@@ -63,11 +60,8 @@ class FrameButtons(Frame):
             messagebox.showinfo("Winner", self.parent.winner)
             self.parent.next_game()
 
-        # self.parent.var.set(0)
-        # self.hit_button.configure(state=DISABLED)
-
     def split(self):
-        pass
+        self.parent.split()
 
     def stand(self):
         self.parent.stand()
@@ -75,10 +69,14 @@ class FrameButtons(Frame):
         self.parent.next_game()
 
     def double(self):
-        self.parent.double() # do it
+        self.parent.double()
+        messagebox.showinfo("Winner", self.parent.winner)
+        self.parent.next_game()
 
     def blackjack(self):
-        pass
+        self.parent.blackjack()
+        messagebox.showinfo("Winner", self.parent.winner)
+        self.parent.next_game()
 
     def insurance(self):
         if self.parent.insurance() and self.parent.human.amount_of_cards == 0:

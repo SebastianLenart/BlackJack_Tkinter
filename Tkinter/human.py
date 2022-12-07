@@ -5,17 +5,17 @@ from tkinter import *
 class Human(Player):
     DEBT = 2001
 
-    def __init__(self, deck: Deck, list_of_frames, middle, bottom):
+    def __init__(self, deck: Deck, list_of_frames, middle):
         super().__init__(deck, list_of_frames)
         self.middle_table = middle
-        # self.bottom_table = bottom
+        self.bottom_table = None
         self.all_money = self.DEBT
         self.bet = 0
         self.bet2 = 0
         self.deck_of_player2_after_split = Deck(self.list_of_frames)
         self.list_of_sum2_after_split = [0]
         self.amount_of_cards2_after_split = 0
-
+        self.player_score_label_second_box = None
         self.player_score_label = Label(self.middle_table, text=f"Human {self.list_of_sum}", font=("Arial", 26))
         self.player_score_label.pack(side=TOP, fill="x", expand=False)
 
@@ -34,6 +34,10 @@ class Human(Player):
             self.cards_label.append(card_label)
         self.player_score_label.configure(text=f"Human {self.list_of_sum}", font=("Arial", 26))
 
+    def set_parent_bottom_table(self, bottom_frame):
+        self.bottom_table = bottom_frame
+
+
 
     def print_split_deck(self, who: str):
         print(who, "sum: ", self.list_of_sum, " => ", *self.deck_of_player.cards,
@@ -41,8 +45,13 @@ class Human(Player):
               self.list_of_sum2_after_split, " => ", *self.deck_of_player2_after_split.cards,
               "debt:", self.bet2)
 
-    def split_deck(self):  # how to split two as?
+    def split_deck(self):
+        self.bottom_table = self.bottom_table
+        self.player_score_label_second_box = Label(self.bottom_table, text=f"Human {self.list_of_sum}", font=("Arial", 26))
+        self.player_score_label_second_box.pack(side=TOP, fill="x", expand=False)
         split_card = self.deck_of_player.cards.pop()
+        self.display_cards()
+        self.player_score_label.configure(text=f"Human {self.list_of_sum}", font=("Arial", 26))
         if self.deck_of_player.cards[-1].get_figure() == "A":
             self.list_of_sum = [1, 11]
             self.list_of_sum2_after_split = [1, 11]

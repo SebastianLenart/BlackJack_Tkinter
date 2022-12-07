@@ -47,20 +47,13 @@ Enter your choice:
         self.bottom_table = None
         self.create_frames_in_table()
         self.deck = Deck(self.list_of_frames)
-        self.human = Human(self.deck, self.list_of_frames, self.middle_table, self.bottom_table)
+        self.human = Human(self.deck, self.list_of_frames, self.middle_table)
         self.croupier = Croupier(self.deck, self.list_of_frames, self.top_table)
         self.mode_split = False
         self.finish = False
         self.deck.insert_cards()
         self.initialization()
         self.winner = None
-        # self.bnt = None
-        # self.var = IntVar()
-        # self.var.set(-1)
-        # self.start_play()
-
-        # tests
-        # self.deck.appear_all_card()
 
     def create_frames_in_table(self):
         self.top_table = Frame(self.frame_table, bg="#166B37")
@@ -70,9 +63,6 @@ Enter your choice:
         self.top_table.pack_propagate(False)
         self.middle_table.pack_propagate(False)
 
-        # self.bottom_table = Frame(self.frame_table, bg="#166B37")
-        # self.bottom_table.pack(fill=BOTH, expand=True)
-
     def initialization(self):
         self.frame_of_results.all_money_label.configure(text=f"All money: {self.human.get_all_money()}")
         self.frame_of_results.update_labels()
@@ -81,14 +71,6 @@ Enter your choice:
         self.human.insert_cards(1)
         self.human.display_cards()
         self.print_deck_of_player()
-        # if self.human.check_max_value() > self.BLACK_JACK:
-        #     self.check_result(self.human.get_best_value())
-
-            # if not self.mode_split:
-            #     self.check_result(self.human.get_best_value(), "Box 1")
-            # else:
-            #     return True
-            # return False
 
     def hit_second_box(self):
         self.human.insert_cards(1, self.human.deck_of_player2_after_split,
@@ -107,19 +89,22 @@ Enter your choice:
 
     def double(self):
         self.make_bet(self.human.get_value_of_bet())
+        self.frame_of_results.all_money_label.configure(text=f"All money: {self.human.get_all_money()}")
         self.human.insert_cards(1)
         self.human.display_cards()
         if self.human.check_max_value() > self.BLACK_JACK:
             self.print_deck_of_player()
+            self.human.display_cards()
             self.check_result(self.human.get_best_value())
         else:
             self.stand()
 
     def split(self):
-        if self.check_split():
-            print("Option split is not available. Must be 2 same cards")
-            return
-        print("Split is OK.")
+        self.bottom_table = Frame(self.frame_table, bg="#166B37")
+        self.bottom_table.pack(fill=BOTH, expand=True)
+        self.bottom_table.pack_propagate(False)
+        self.human.set_parent_bottom_table(self.bottom_table)
+
         self.mode_split = True
         self.human.split_deck()
         self.print_deck_of_player()
@@ -131,16 +116,20 @@ Enter your choice:
         if self.human.get_best_value() == self.BLACK_JACK and self.human.amount_of_cards == 2:
             list_of_ten_or_eleven = [10, 11]
             if self.croupier.get_best_value() not in list_of_ten_or_eleven:
+                self.winner = "HUMAN WIN"
                 print("HUMAN WIN")
                 self.get_standard_award("3")
             if self.croupier.deck_of_player.cards[0].get_value() in [10, 11]:
                 self.croupier.insert_cards(1)
+                self.croupier.display_cards()
                 if self.croupier.get_best_value() == self.BLACK_JACK:
                     self.print_deck_of_player()
+                    self.winner = "DRAW"
                     print("DRAW")
                     self.get_standard_award("2")
                 else:
                     self.print_deck_of_player()
+                    self.winner = "HUMAN WIN"
                     print("HUMAN WIN")
                     self.get_standard_award("3")
         else:
@@ -150,7 +139,6 @@ Enter your choice:
         if (self.human.amount_of_cards == 2 and
                 self.human.deck_of_player.cards[0].get_figure() == self.human.deck_of_player.cards[1].get_figure()):
             return False
-        print(self.human.amount_of_cards)
         return True
 
     def insert_card_in_split_mode(self):
@@ -188,7 +176,6 @@ Enter your choice:
             self.winner = "HUMAN LOST"
             print("HUMAN LOST", box)
             self.get_standard_award("1")
-        # self.next_game()
 
 
     @staticmethod
@@ -213,26 +200,11 @@ Enter your choice:
             self.check_conditions_buttons()
             return False
 
-        #     self.frame_of_buttons.insurance_button.wait_variable(self.var)
-        #     choice = self.var.get()
-        #     if choice == 5:
-        #         self.get_standard_award("5")
-        #         self.next_game()
-        #         return True
-        #     elif choice == 0:
-        #         self.frame_of_buttons.insurance_button.configure(state=DISABLED)
-        #         return False
-        # else:
-        #     return False
 
     def first_hand(self):
         self.croupier.insert_cards(1)
         self.croupier.display_cards()
         self.insurance()
-            # self.human.insert_cards(2)
-            # print("sss")
-            # self.human.display_cards()
-            # self.check_conditions_buttons()
 
     def make_bet(self, value=50):
         print("make bet: ", value)
@@ -244,17 +216,14 @@ Enter your choice:
         self.finish = True
 
     def next_game(self):  # default widgets grid itp..
-
         for widget in self.top_table.winfo_children():
-            try:
-                print(widget.return_text()["text"])
-            except KeyError:
+            if "Croupier" not in widget.cget("text"):
                 widget.destroy()
-        for widget in self.middle_table.winfo_children(): # to tes t!!!
-            try:
-                print(widget.return_text()["text"])
-            except KeyError:
+        for widget in self.middle_table.winfo_children():
+            if "Human" not in widget.cget("text"):
                 widget.destroy()
+        if isinstance(self.bottom_table, Frame):
+            self.bottom_table.destroy()
         del self.deck
         self.deck = Deck(self.list_of_frames)
         self.deck.insert_cards()
@@ -264,14 +233,12 @@ Enter your choice:
         if self.human.all_money <= 0:
             raise GaveOverHumanEmptyWallet("Game over, your wallet is empty!")
         self.frame_of_results.button_confirm.configure(state=NORMAL)
-        # self.var.set(-1)
         self.frame_of_buttons.hit_button.configure(state=DISABLED)
         self.frame_of_buttons.stand_button.configure(state=DISABLED)
         self.frame_of_buttons.double_button.configure(state=DISABLED)
         self.frame_of_buttons.split_button.configure(state=DISABLED)
         self.frame_of_buttons.blackjack_button.configure(state=DISABLED)
         self.frame_of_buttons.insurance_button.configure(state=DISABLED)
-        # self.start_play()
 
     def check_conditions_buttons(self):
         self.frame_of_buttons.hit_button.configure(state=NORMAL)
@@ -279,8 +246,12 @@ Enter your choice:
         self.frame_of_buttons.double_button.configure(state=NORMAL)
         if not self.check_split():
             self.frame_of_buttons.split_button.configure(state=NORMAL)
+        else:
+            self.frame_of_buttons.split_button.configure(state=DISABLED)
         if self.human.get_best_value() == self.BLACK_JACK and self.human.amount_of_cards == 2:
             self.frame_of_buttons.blackjack_button.configure(state=NORMAL)
+        else:
+            self.frame_of_buttons.blackjack_button.configure(state=DISABLED)
 
     def start_play(self):
         menu_functions = {
