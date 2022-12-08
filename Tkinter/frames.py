@@ -7,6 +7,7 @@ from word2number import w2n
 
 class FrameButtons(Frame):
     OPTIONS = {"pady": 10}
+    split_mode = 0
 
     def __init__(self, container):
         super().__init__(container)
@@ -47,28 +48,62 @@ class FrameButtons(Frame):
         exit()
 
     def hit(self):
-        if (self.parent.human.amount_of_cards == 0 and self.parent.insurance()) or self.parent.human.amount_of_cards == 0:
-            self.parent.human.insert_cards(2)
-            self.parent.human.display_cards()
-            self.insurance_button.configure(state=DISABLED)
-        else:
-            self.parent.hit()
-        self.parent.check_conditions_buttons()
+        if self.split_mode == 0:
+            if (
+                    self.parent.human.amount_of_cards == 0 and self.parent.insurance()) or self.parent.human.amount_of_cards == 0:
+                self.parent.human.insert_cards(2)
+                self.parent.human.display_cards()
+                self.insurance_button.configure(state=DISABLED)
+            else:
+                self.parent.hit()
+            self.parent.check_conditions_buttons()
 
+            if self.parent.human.check_max_value() > self.parent.BLACK_JACK:
+                self.parent.check_result(self.parent.human.get_best_value())
+                messagebox.showinfo("Winner", self.parent.winner)
+                self.parent.next_game()
+
+        if self.split_mode == 2:
+            self.hit_second_box_mode_split()
+        if self.split_mode == 1:
+            self.hit_first_box_mode_split()
+
+    def hit_first_box_mode_split(self):
+        self.parent.hit()
         if self.parent.human.check_max_value() > self.parent.BLACK_JACK:
             self.parent.check_result(self.parent.human.get_best_value())
-            messagebox.showinfo("Winner", self.parent.winner)
+            messagebox.showinfo("Winner", f"BOX 1: " + self.parent.winner)
+            self.split_mode = 2
+
+    def hit_second_box_mode_split(self):
+        self.parent.hit_second_box()
+        if self.parent.human.check_max_value() > self.parent.BLACK_JACK:
+            self.parent.check_result(self.parent.human.get_best_value())
+            messagebox.showinfo("Winner", f"BOX 2: " + self.parent.winner)
             self.parent.next_game()
 
     def split(self):
+        self.split_mode = 1
+        self.double_button.configure(state=DISABLED)
+        self.split_button.configure(state=DISABLED)
         self.parent.split()
 
     def stand(self):
-        self.parent.stand()
-        messagebox.showinfo("Winner", self.parent.winner)
-        self.parent.next_game()
+        if self.split_mode == 0:
+            self.parent.stand()
+            messagebox.showinfo("Winner", self.parent.winner)
+            self.parent.next_game()
+        if self.split_mode == 2:
+            self.parent.check_result(self.parent.human.get_best_value_box2(), "Box 2")
+            messagebox.showinfo("Winner", f"BOX 2: " + self.parent.winner)
+            self.parent.next_game()
+        if self.split_mode == 1:
+            self.parent.stand("Box 1")
+            messagebox.showinfo("Winner", f"BOX 1: " + self.parent.winner)
+            self.split_mode = 2
 
     def double(self):
+        self.double_button.configure(state=DISABLED)
         self.parent.double()
         messagebox.showinfo("Winner", self.parent.winner)
         self.parent.next_game()
@@ -151,6 +186,7 @@ class FrameResults(Frame):
         self.update_labels()
         self.parent.make_bet(int(self.selected_bet.get()))
         self.button_start.configure(state=NORMAL)
+        setattr(FrameButtons, "split_mode", 0)
 
     def get_value_radio_bet(self):
         return self.selected_bet.get()

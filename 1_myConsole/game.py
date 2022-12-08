@@ -127,15 +127,18 @@ Enter your choice:
     def insert_card_in_split_mode(self):
         list_of_hits = {"1": self.hit}  # the order matters!
         for counter in range(self.AMOUNT_OF_BOXES):
-            select = input(f"0.) STAND \n1.) HIT\nBox {counter + 1}: Choose option: ")
-            while select not in ["0", "1"]:
-                select = input(f"Try again\n0.) STAND \n1.) HIT\nBox {counter + 1}: Choose option: ")
-            if select == "0":
-                continue
-            try:
-                list_of_hits[select]()
-            except IndexError:
-                print("Out of range list. Try again")
+            condition = True
+            while condition:
+                select = input(f"0.) STAND \n1.) HIT\nBox {counter + 1}: Choose option: ")
+                while select not in ["0", "1"]:
+                    select = input(f"Try again\n0.) STAND \n1.) HIT\nBox {counter + 1}: Choose option: ")
+                if select == "0":
+                    condition = False
+                    continue
+                try:
+                    list_of_hits[select]()
+                except IndexError:
+                    print("Out of range list. Try again")
             list_of_hits["1"] = self.hit_second_box
 
     def check_result(self, human_result, box=""):

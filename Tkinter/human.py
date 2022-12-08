@@ -2,6 +2,7 @@ from player import Player
 from deck import Deck
 from tkinter import *
 
+
 class Human(Player):
     DEBT = 2001
 
@@ -18,6 +19,7 @@ class Human(Player):
         self.player_score_label_second_box = None
         self.player_score_label = Label(self.middle_table, text=f"Human {self.list_of_sum}", font=("Arial", 26))
         self.player_score_label.pack(side=TOP, fill="x", expand=False)
+        self.cards_labels_after_split = []
 
     def print_deck_of_player(self, who: str):
         print(who, "sum: ", self.list_of_sum, " => ", *self.deck_of_player.cards,
@@ -34,10 +36,18 @@ class Human(Player):
             self.cards_label.append(card_label)
         self.player_score_label.configure(text=f"Human {self.list_of_sum}", font=("Arial", 26))
 
+    def display_cards_after_split(self):
+        for card in self.cards_labels_after_split:
+            card.destroy()
+
+        for card in self.deck_of_player2_after_split.cards:
+            card_label = Label(self.bottom_table, image=card.get_image())
+            card_label.pack(side=LEFT)
+            self.cards_labels_after_split.append(card_label)
+        self.player_score_label_second_box.configure(text=f"Human2 {self.list_of_sum2_after_split}", font=("Arial", 26))
+
     def set_parent_bottom_table(self, bottom_frame):
         self.bottom_table = bottom_frame
-
-
 
     def print_split_deck(self, who: str):
         print(who, "sum: ", self.list_of_sum, " => ", *self.deck_of_player.cards,
@@ -46,12 +56,12 @@ class Human(Player):
               "debt:", self.bet2)
 
     def split_deck(self):
-        self.bottom_table = self.bottom_table
-        self.player_score_label_second_box = Label(self.bottom_table, text=f"Human {self.list_of_sum}", font=("Arial", 26))
+        self.player_score_label_second_box = Label(self.bottom_table, text=f"Human2 {self.list_of_sum2_after_split}",
+                                                   font=("Arial", 26))
         self.player_score_label_second_box.pack(side=TOP, fill="x", expand=False)
         split_card = self.deck_of_player.cards.pop()
-        self.display_cards()
         self.player_score_label.configure(text=f"Human {self.list_of_sum}", font=("Arial", 26))
+
         if self.deck_of_player.cards[-1].get_figure() == "A":
             self.list_of_sum = [1, 11]
             self.list_of_sum2_after_split = [1, 11]
@@ -65,6 +75,9 @@ class Human(Player):
         self.bet2 = self.bet
         self.update_debt_of_human(self.bet2)
         self.bet = self.bet2
+
+        self.display_cards()
+        self.display_cards_after_split()
 
     def update_debt_of_human(self, value: int):
         if self.all_money > 0:
@@ -95,4 +108,5 @@ class Human(Player):
         self.deck_of_player2_after_split = Deck(self.list_of_frames)
         self.list_of_sum2_after_split = [0]
         self.amount_of_cards2_after_split = 0
+        self.cards_labels_after_split = []
         # update Human [0]

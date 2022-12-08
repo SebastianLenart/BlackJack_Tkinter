@@ -22,9 +22,9 @@ class Deck:
         self.cards = []
         self.value_of_cards = []
         self.colour = ["trefl", "pik", "karo", "kier"]
-        self.figure = ["2", "3", "4", "5", "6", "7",
+        self.figure2 = ["2", "3", "4", "5", "6", "7",
                        "8", "9", "10", "J", "Q", "K", "A"]
-        self.figure2 = ["K", "A"]
+        self.figure = ["K", "A"]
 
     def insert_cards(self):
         for fig in self.figure:

@@ -50,7 +50,6 @@ Enter your choice:
         self.human = Human(self.deck, self.list_of_frames, self.middle_table)
         self.croupier = Croupier(self.deck, self.list_of_frames, self.top_table)
         self.mode_split = False
-        self.finish = False
         self.deck.insert_cards()
         self.initialization()
         self.winner = None
@@ -77,6 +76,7 @@ Enter your choice:
                                 self.human.list_of_sum2_after_split,
                                 self.human.amount_of_cards2_after_split)
         self.print_deck_of_player()
+        self.human.display_cards_after_split()
         if self.human.check_max_value_2_box() > self.BLACK_JACK:
             return True
 
@@ -105,12 +105,11 @@ Enter your choice:
         self.bottom_table.pack_propagate(False)
         self.human.set_parent_bottom_table(self.bottom_table)
 
-        self.mode_split = True
         self.human.split_deck()
         self.print_deck_of_player()
-        self.insert_card_in_split_mode()
-        self.stand("Box 1")
-        self.check_result(self.human.get_best_value_box2(), "Box 2")
+        # self.insert_card_in_split_mode()
+        # self.stand("Box 1")
+        # self.check_result(self.human.get_best_value_box2(), "Box 2")
 
     def blackjack(self):
         if self.human.get_best_value() == self.BLACK_JACK and self.human.amount_of_cards == 2:
@@ -213,7 +212,6 @@ Enter your choice:
     def get_standard_award(self, mode: str):
         self.human.add_award(self.DICTIONARY_AWARDS[mode] * self.human.get_value_of_bet())
         print(self.human.get_all_money())
-        self.finish = True
 
     def next_game(self):  # default widgets grid itp..
         for widget in self.top_table.winfo_children():
@@ -239,6 +237,7 @@ Enter your choice:
         self.frame_of_buttons.split_button.configure(state=DISABLED)
         self.frame_of_buttons.blackjack_button.configure(state=DISABLED)
         self.frame_of_buttons.insurance_button.configure(state=DISABLED)
+        self.frame_of_buttons.split_mode = 0
 
     def check_conditions_buttons(self):
         self.frame_of_buttons.hit_button.configure(state=NORMAL)
@@ -263,23 +262,6 @@ Enter your choice:
             "6": self.insurance,
             "7": exit
         }
-        # self.first_hand()
-
-
-
-
-        # while (selection := input(self.MENU)) != "7":
-        #     try:
-        #         menu_functions[selection]()
-        #         if self.finish:
-        #             self.finish = False
-        #             self.next_game()
-        #     except KeyError:
-        #         print("Invalid input selected. Try again")
-        #     finally:
-        #         if selection == "7":
-        #             exit()
-
 
 if __name__ == "__main__":
     game = Game()
