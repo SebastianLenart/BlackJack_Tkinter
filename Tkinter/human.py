@@ -109,4 +109,3 @@ class Human(Player):
         self.list_of_sum2_after_split = [0]
         self.amount_of_cards2_after_split = 0
         self.cards_labels_after_split = []
-        # update Human [0]

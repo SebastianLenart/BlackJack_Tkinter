@@ -3,20 +3,9 @@ from human import Human
 from croupier import Croupier
 from exceptions import GaveOverHumanEmptyWallet
 from tkinter import *
-from frames import FrameButtons, FrameTable, FrameResults
-from tkinter import ttk
 
 
 class Game:
-    MENU = """1.) HIT
-2.) STAND
-3.) DOUBLE
-4.) SPLIT
-5.) BLACKJACK
-6.) INSURANCE
-7.) EXIT
-Enter your choice: 
-"""
     STOP_ADD_CROUPIER = 17
     BLACK_JACK = 21
     AMOUNT_OF_BOXES = 2
@@ -53,6 +42,8 @@ Enter your choice:
         self.deck.insert_cards()
         self.initialization()
         self.winner = None
+        self.winnerbox1 = None
+        self.winnerbox2 = None
 
     def create_frames_in_table(self):
         self.top_table = Frame(self.frame_table, bg="#166B37")
@@ -77,8 +68,6 @@ Enter your choice:
                                 self.human.amount_of_cards2_after_split)
         self.print_deck_of_player()
         self.human.display_cards_after_split()
-        if self.human.check_max_value_2_box() > self.BLACK_JACK:
-            return True
 
     def stand(self, box=""):
         while self.croupier.get_best_value() < self.STOP_ADD_CROUPIER:
@@ -104,12 +93,9 @@ Enter your choice:
         self.bottom_table.pack(fill=BOTH, expand=True)
         self.bottom_table.pack_propagate(False)
         self.human.set_parent_bottom_table(self.bottom_table)
-
+        self.mode_split = True
         self.human.split_deck()
         self.print_deck_of_player()
-        # self.insert_card_in_split_mode()
-        # self.stand("Box 1")
-        # self.check_result(self.human.get_best_value_box2(), "Box 2")
 
     def blackjack(self):
         if self.human.get_best_value() == self.BLACK_JACK and self.human.amount_of_cards == 2:
@@ -140,42 +126,36 @@ Enter your choice:
             return False
         return True
 
-    def insert_card_in_split_mode(self):
-        list_of_hits = {"1": self.hit}  # the order matters!
-        for counter in range(self.AMOUNT_OF_BOXES):
-            select = input(f"0.) STAND \n1.) HIT\nBox {counter + 1}: Choose option: ")
-            while select not in ["0", "1"]:
-                select = input(f"Try again\n0.) STAND \n1.) HIT\nBox {counter + 1}: Choose option: ")
-            if select == "0":
-                continue
-            try:
-                list_of_hits[select]()
-            except IndexError:
-                print("Out of range list. Try again")
-            list_of_hits["1"] = self.hit_second_box
-
-    def check_result(self, human_result, box=""):
+    def check_result(self, human_result, box="", secondbox=False):
+        win = None
         if human_result > self.BLACK_JACK:
-            self.winner = "HUMAN LOST"
+            win = "HUMAN LOST"
             print("HUMAN LOST", box)
             self.get_standard_award("1")
         elif self.croupier.get_best_value() > self.BLACK_JACK:
-            self.winner = "HUMAN WIN"
+            win = "HUMAN WIN"
             print("HUMAN WIN", box)
             self.get_standard_award("4")
         elif self.croupier.get_best_value() == human_result:
-            self.winner = "DRAW"
+            win = "DRAW"
             print("DRAW", box)
             self.get_standard_award("2")
         elif human_result > self.croupier.get_best_value():
-            self.winner = "HUMAN WIN"
+            win = "HUMAN WIN"
             print("HUMAN WIN", box)
             self.get_standard_award("4")
         elif human_result < self.croupier.get_best_value():
-            self.winner = "HUMAN LOST"
+            win = "HUMAN LOST"
             print("HUMAN LOST", box)
             self.get_standard_award("1")
 
+        if self.mode_split:
+            if not secondbox:
+                self.winnerbox1 = win
+            else:
+                self.winnerbox2 = win
+        else:
+            self.winner = win
 
     @staticmethod
     def print_deck(deck: Deck):
@@ -199,7 +179,6 @@ Enter your choice:
             self.check_conditions_buttons()
             return False
 
-
     def first_hand(self):
         self.croupier.insert_cards(1)
         self.croupier.display_cards()
@@ -213,7 +192,7 @@ Enter your choice:
         self.human.add_award(self.DICTIONARY_AWARDS[mode] * self.human.get_value_of_bet())
         print(self.human.get_all_money())
 
-    def next_game(self):  # default widgets grid itp..
+    def next_game(self):
         for widget in self.top_table.winfo_children():
             if "Croupier" not in widget.cget("text"):
                 widget.destroy()
@@ -238,6 +217,7 @@ Enter your choice:
         self.frame_of_buttons.blackjack_button.configure(state=DISABLED)
         self.frame_of_buttons.insurance_button.configure(state=DISABLED)
         self.frame_of_buttons.split_mode = 0
+        self.mode_split = False
 
     def check_conditions_buttons(self):
         self.frame_of_buttons.hit_button.configure(state=NORMAL)
@@ -252,25 +232,7 @@ Enter your choice:
         else:
             self.frame_of_buttons.blackjack_button.configure(state=DISABLED)
 
-    def start_play(self):
-        menu_functions = {
-            "1": self.hit,
-            "2": self.stand,
-            "3": self.double,
-            "4": self.split,
-            "5": self.blackjack,
-            "6": self.insurance,
-            "7": exit
-        }
 
 if __name__ == "__main__":
     game = Game()
     game.initialization()
-    # game.start_play()
-
-# do zrobienia:
-"""
-
-testy
-
-"""

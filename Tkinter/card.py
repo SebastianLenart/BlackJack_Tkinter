@@ -1,7 +1,5 @@
 from tkinter import *
 from PIL import ImageTk, Image
-from tkinter import *
-from PIL import ImageTk, Image
 
 
 class Card:
@@ -26,12 +24,12 @@ class Card:
 
     def set_image_path(self, path_image):
         self.image_path = path_image
-        self.set_image(self.image_path)
+        self.set_image()
 
     def get_image_path(self):
         return self.image_path
 
-    def set_image(self, path_image):
+    def set_image(self):
         image = Image.open(self.image_path)
         img = image.resize((int(image.width / 7), int(image.height / 7)))
         self.my_img = ImageTk.PhotoImage(img)

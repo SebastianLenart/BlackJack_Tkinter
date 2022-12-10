@@ -49,8 +49,7 @@ class FrameButtons(Frame):
 
     def hit(self):
         if self.split_mode == 0:
-            if (
-                    self.parent.human.amount_of_cards == 0 and self.parent.insurance()) or self.parent.human.amount_of_cards == 0:
+            if (self.parent.human.amount_of_cards == 0 and self.parent.insurance()) or self.parent.human.amount_of_cards == 0:
                 self.parent.human.insert_cards(2)
                 self.parent.human.display_cards()
                 self.insurance_button.configure(state=DISABLED)
@@ -71,16 +70,12 @@ class FrameButtons(Frame):
     def hit_first_box_mode_split(self):
         self.parent.hit()
         if self.parent.human.check_max_value() > self.parent.BLACK_JACK:
-            self.parent.check_result(self.parent.human.get_best_value())
-            messagebox.showinfo("Winner", f"BOX 1: " + self.parent.winner)
             self.split_mode = 2
 
     def hit_second_box_mode_split(self):
         self.parent.hit_second_box()
-        if self.parent.human.check_max_value() > self.parent.BLACK_JACK:
-            self.parent.check_result(self.parent.human.get_best_value())
-            messagebox.showinfo("Winner", f"BOX 2: " + self.parent.winner)
-            self.parent.next_game()
+        if self.parent.human.check_max_value_2_box() > self.parent.BLACK_JACK:
+            self.check_results_in_split_mode()
 
     def split(self):
         self.split_mode = 1
@@ -94,13 +89,17 @@ class FrameButtons(Frame):
             messagebox.showinfo("Winner", self.parent.winner)
             self.parent.next_game()
         if self.split_mode == 2:
-            self.parent.check_result(self.parent.human.get_best_value_box2(), "Box 2")
-            messagebox.showinfo("Winner", f"BOX 2: " + self.parent.winner)
-            self.parent.next_game()
+            self.check_results_in_split_mode()
         if self.split_mode == 1:
-            self.parent.stand("Box 1")
-            messagebox.showinfo("Winner", f"BOX 1: " + self.parent.winner)
             self.split_mode = 2
+
+    def check_results_in_split_mode(self):
+        self.parent.stand("Box 1")
+        self.parent.croupier.display_cards()
+        self.parent.check_result(self.parent.human.get_best_value_box2(), "Box 2", True)
+        messagebox.showinfo("Winner", f"BOX 1: " + self.parent.winnerbox1 + "\n" +
+                            f"BOX 2: " + self.parent.winnerbox2)
+        self.parent.next_game()
 
     def double(self):
         self.double_button.configure(state=DISABLED)
@@ -153,7 +152,6 @@ class FrameResults(Frame):
         Label(self, text="\tFrameResults\t").grid(row=0, column=0)
         self.selected_bet = StringVar()
         self.create_radio_buttons()
-        # define variable
         self.all_money_label = Label(self, text=f"All money: {200110}")
         self.current_bet_label = Label(self, text=f"Current bet: {2000}")
         self.bet_label = Label(self, text="Choose value of bet:")

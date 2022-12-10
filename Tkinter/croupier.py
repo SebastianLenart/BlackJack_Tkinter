@@ -1,10 +1,7 @@
-from tkinter import font
-
 from player import Player
 from deck import Deck
 from card import Card
 from tkinter import *
-from PIL import ImageTk, Image
 
 
 class Croupier(Player):
@@ -13,9 +10,7 @@ class Croupier(Player):
         self.top_table = top_table
         self.player_score_label = Label(self.top_table, text=f"Croupier {self.list_of_sum}", font=("Arial", 26))
         self.player_score_label.pack(side=TOP, fill="x", expand=False)
-        # self.cards_label = [] # in player
         self.default_card = Card()
-        # self.player_score_label.pack()
 
     def print_deck_of_player(self, who: str):
         super().print_deck_of_player(who)

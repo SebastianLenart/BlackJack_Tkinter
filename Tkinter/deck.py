@@ -4,7 +4,6 @@ from exceptions import NotEnoughCards
 import os
 from word2number import w2n
 from tkinter import *
-from PIL import ImageTk, Image
 
 
 class Deck():
@@ -32,14 +31,13 @@ class Deck():
         self.cards = []
         self.value_of_cards = []
         self.colour = ["Clubs", "Diamonds", "Hearts", "Spades"]
-        self.figure2 = ["2", "3", "4", "5", "6", "7",
+        self.figure = ["2", "3", "4", "5", "6", "7",
                        "8", "9", "10", "J", "Q", "K", "A"]
-        self.figure = ["K", "A"]
+        self.figure2 = ["Q", "K", "A"]
         self.direction = os.listdir(self.PATH_ICONS)
         self.image_list = []
 
     def insert_cards(self):
-        counter = [0]  # mutable type
         for fig in self.figure:
             for col in self.colour:
                 self.cards.append(Card(fig, col))
